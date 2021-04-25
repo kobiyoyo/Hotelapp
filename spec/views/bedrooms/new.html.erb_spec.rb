@@ -5,7 +5,7 @@ RSpec.describe "bedrooms/new", type: :view do
     assign(:bedroom, Bedroom.new(
       status: 1,
       quantity: 1,
-      room/type: nil
+      room_type: nil
     ))
   end
 
@@ -18,7 +18,7 @@ RSpec.describe "bedrooms/new", type: :view do
 
       assert_select "input[name=?]", "bedroom[quantity]"
 
-      assert_select "input[name=?]", "bedroom[room/type_id]"
+      assert_select "input[name=?]", "bedroom[room_type_id]"
     end
   end
 end

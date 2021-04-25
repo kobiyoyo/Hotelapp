@@ -5,7 +5,7 @@ RSpec.describe "bedrooms/show", type: :view do
     @bedroom = assign(:bedroom, Bedroom.create!(
       status: 2,
       quantity: 3,
-      room/type: nil
+      room_type: nil
     ))
   end
 

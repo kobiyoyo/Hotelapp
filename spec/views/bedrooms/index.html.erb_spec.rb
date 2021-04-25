@@ -6,12 +6,12 @@ RSpec.describe "bedrooms/index", type: :view do
       Bedroom.create!(
         status: 2,
         quantity: 3,
-        room/type: nil
+        room_type: nil
       ),
       Bedroom.create!(
         status: 2,
         quantity: 3,
-        room/type: nil
+        room_type: nil
       )
     ])
   end

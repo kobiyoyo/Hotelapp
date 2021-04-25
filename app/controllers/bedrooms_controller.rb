@@ -1,69 +1,69 @@
 class BedroomsController < ApplicationController
-  before_action :set_bedroom, only: %i[ show edit update destroy ]
 
-  # GET /bedrooms or /bedrooms.json
   def index
-    @bedrooms = Bedroom.all
+    @bedrooms = Bedrooms::ListBedroomService.run!
   end
 
-  # GET /bedrooms/1 or /bedrooms/1.json
   def show
+    @bedroom = find_bedroom!
   end
 
-  # GET /bedrooms/new
   def new
-    @bedroom = Bedroom.new
+    @bedroom = Bedrooms::CreateBedroomService.new
   end
 
-  # GET /bedrooms/1/edit
+
   def edit
+    @bedroom = find_bedroom!
   end
 
-  # POST /bedrooms or /bedrooms.json
+
   def create
-    @bedroom = Bedroom.new(bedroom_params)
-
-    respond_to do |format|
-      if @bedroom.save
-        format.html { redirect_to @bedroom, notice: "Bedroom was successfully created." }
-        format.json { render :show, status: :created, location: @bedroom }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @bedroom.errors, status: :unprocessable_entity }
-      end
+    result = Bedrooms::CreateBedroomService.run(bedroom_params)
+    if result.valid?
+      redirect_to bedrooms_path, notice: "Bedroom was successfully created." 
+    else
+      @bedroom = result
+      render :new
     end
   end
 
-  # PATCH/PUT /bedrooms/1 or /bedrooms/1.json
+
   def update
-    respond_to do |format|
-      if @bedroom.update(bedroom_params)
-        format.html { redirect_to @bedroom, notice: "Bedroom was successfully updated." }
-        format.json { render :show, status: :ok, location: @bedroom }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @bedroom.errors, status: :unprocessable_entity }
-      end
+    @bedroom = find_bedroom!
+    result = Bedrooms::UpdateBedroomService.run(bedroom_params.merge(bedroom: @bedroom))
+    
+    if result.valid?
+      redirect_to bedroom_path(bedroom: @bedroom), notice: "Bedroom was successfully updated." 
+    else
+      @bedroom = result
+      render :edit
     end
   end
 
-  # DELETE /bedrooms/1 or /bedrooms/1.json
+
   def destroy
-    @bedroom.destroy
-    respond_to do |format|
-      format.html { redirect_to bedrooms_url, notice: "Bedroom was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    Bedrooms::DestroyBedroomService.run!(bedroom: find_bedroom!)
+    redirect_to room_type_path(find_room_type!), notice: "Bedroom was successfully destroyed." 
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_bedroom
-      @bedroom = Bedroom.find(params[:id])
+
+    def bedroom_params
+      params.require(:bedroom).permit(:status, :quantity, :room_type_id)
     end
 
-    # Only allow a list of trusted parameters through.
-    def bedroom_params
-      params.require(:bedroom).permit(:status, :quantity, :room/type_id)
+    def find_bedroom!
+      bedroom = Bedrooms::FindBedroomService.run(params)
+      raise ActiveRecord::RecordNotFound, bedroom.errors.full_messages.to_sentence unless bedroom.valid?
+      bedroom.result
     end
+
+    def find_room_type!
+      room_type = Types::FindRoomTypeService.run(id: params[:room_type_id])
+      raise ActiveRecord::RecordNotFound, room_type.errors.full_messages.to_sentence unless room_type.valid?
+      room_type.result
+    end
+
+
 end

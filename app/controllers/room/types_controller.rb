@@ -9,13 +9,7 @@ class Room::TypesController < ApplicationController
   end
 
   def edit
-    room_type = find_room_type!
-    @room_type = Types::UpdateRoomTypeService.new(
-      room_type: room_type,
-      price: room_type.price,
-      name: room_type.name,
-      description: room_type.description
-    )
+    @room_type = find_room_type!
   end
 
   def create
@@ -49,6 +43,11 @@ class Room::TypesController < ApplicationController
     room_type = Types::FindRoomTypeService.run(params)
     raise ActiveRecord::RecordNotFound, room_type.errors.full_messages.to_sentence unless room_type.valid?
     room_type.result
+  end
+  def find_bedroom!
+    bedroom = Bedrooms::FindBedroomService.run(id: params[:bedroom_id])
+    raise ActiveRecord::RecordNotFound, bedroom.errors.full_messages.to_sentence unless bedroom.valid?
+    bedroom.result
   end
 
   def room_type_params
