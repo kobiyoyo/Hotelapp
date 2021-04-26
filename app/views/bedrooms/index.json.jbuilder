@@ -1,1 +1,1 @@
-json.array! @bedrooms, partial: "bedrooms/bedroom", as: :bedroom
+json.array! @bedrooms, partial: 'bedrooms/bedroom', as: :bedroom

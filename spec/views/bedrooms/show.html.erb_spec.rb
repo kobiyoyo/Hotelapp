@@ -1,15 +1,15 @@
 require 'rails_helper'
 
-RSpec.describe "bedrooms/show", type: :view do
+RSpec.describe 'bedrooms/show', type: :view do
   before(:each) do
     @bedroom = assign(:bedroom, Bedroom.create!(
-      status: 2,
-      quantity: 3,
-      room_type: nil
-    ))
+                                  status: 2,
+                                  quantity: 3,
+                                  room_type: nil
+                                ))
   end
 
-  it "renders attributes in <p>" do
+  it 'renders attributes in <p>' do
     render
     expect(rendered).to match(/2/)
     expect(rendered).to match(/3/)

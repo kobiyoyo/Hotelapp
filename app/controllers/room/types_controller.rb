@@ -1,5 +1,4 @@
 class Room::TypesController < ApplicationController
-
   def index
     @room_types = Types::ListRoomTypeService.run!
   end
@@ -42,16 +41,18 @@ class Room::TypesController < ApplicationController
   def find_room_type!
     room_type = Types::FindRoomTypeService.run(params)
     raise ActiveRecord::RecordNotFound, room_type.errors.full_messages.to_sentence unless room_type.valid?
+
     room_type.result
   end
+
   def find_bedroom!
     bedroom = Bedrooms::FindBedroomService.run(id: params[:bedroom_id])
     raise ActiveRecord::RecordNotFound, bedroom.errors.full_messages.to_sentence unless bedroom.valid?
+
     bedroom.result
   end
 
   def room_type_params
     params.require(:room_type).permit(:name, :price, :description)
   end
-
 end

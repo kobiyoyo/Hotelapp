@@ -1,1 +1,1 @@
-json.partial! "bedrooms/bedroom", bedroom: @bedroom
+json.partial! 'bedrooms/bedroom', bedroom: @bedroom

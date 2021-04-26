@@ -1,8 +1,7 @@
 class Room::Type < ApplicationRecord
   self.table_name = 'room_types'
-  
+
   has_many :bedrooms
-  
 end
 
 # == Schema Information
