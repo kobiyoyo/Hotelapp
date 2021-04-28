@@ -1,60 +1,57 @@
 class ReservationsController < ApplicationController
-  before_action :set_reservation, only: %i[ show edit update destroy ]
 
   def index
-    @reservations = Reservation.all
+    @reservations = Reservations::ListReservationService.run!
   end
 
   def show
+    @reservation = find_reservation!
   end
 
   def new
-    @reservation = Reservation.new
+    @reservation = Reservations::CreateReservationService.new
   end
 
   def edit
+    @reservation = find_reservation!
   end
 
   def create
-    @reservation = Reservation.new(reservation_params)
+    result = Reservations::CreateReservationService.run(reservation_params)
 
-    respond_to do |format|
-      if @reservation.save
-        format.html { redirect_to @reservation, notice: "Reservation was successfully created." }
-        format.json { render :show, status: :created, location: @reservation }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
-      end
+    if result.valid?
+      redirect_to @reservation, notice: "Reservation was successfully created."      
+    else
+      @reservation = result
+      render :new
     end
   end
 
   def update
-    respond_to do |format|
-      if @reservation.update(reservation_params)
-        format.html { redirect_to @reservation, notice: "Reservation was successfully updated." }
-        format.json { render :show, status: :ok, location: @reservation }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
-      end
+    @reservation = find_reservation!
+    result = Reservations::UpdateReservationService.run(reservation_params.merge(reservation: @reservation))
+    if result.valid?
+      redirect_to @reservation, notice: "Reservation was successfully updated." 
+    else
+      @reservation = result
+      render :edit
     end
   end
 
   def destroy
-    @reservation.destroy
-    respond_to do |format|
-      format.html { redirect_to reservations_url, notice: "Reservation was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    Reservations::DestroyReservationService.run!(reservation: find_reservation!)
+    redirect_to reservations_url, notice: "Reservation was successfully destroyed."
   end
 
   private
-    def set_reservation
-      @reservation = Reservation.find(params[:id])
-    end
 
     def reservation_params
       params.require(:reservation).permit(:user_id, :bedroom_id, :check_in, :check_out, :adults, :children)
+    end
+
+    def find_reservation!
+      reservation = FindReservationService.run(params)
+      raise ActiveRecord:RecordNotFound, reservation.errors.full_messages.to_sentence unless reservation.valid?
+      reservation.result
     end
 end
