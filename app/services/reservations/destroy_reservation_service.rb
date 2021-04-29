@@ -1,4 +1,9 @@
 module Reservations
-    class CreateReservationService < ActiveInteraction
+    class DestroyReservationService < ActiveInteraction::Base
+        object :reservation, class 'Reservation'
+
+        def execute
+          reservation.destroy
+        end
     end
 end

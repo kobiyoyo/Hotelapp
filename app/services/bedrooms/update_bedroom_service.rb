@@ -1,7 +1,7 @@
 module Bedrooms
   class UpdateBedroomService < ActiveInteraction::Base
     object :bedroom, class: 'Bedroom'
-    integer :status, :quantity, :room_type_id,:room_code
+    integer :status, :quantity, :room_type_id, :room_code
 
     def to_model
       bedroom
