@@ -51,7 +51,7 @@ class ReservationsController < ApplicationController
 
     def find_reservation!
       reservation = FindReservationService.run(params)
-      raise ActiveRecord:RecordNotFound, reservation.errors.full_messages.to_sentence unless reservation.valid?
+      raise ActiveRecord::RecordNotFound, reservation.errors.full_messages.to_sentence unless reservation.valid?
       reservation.result
     end
 end

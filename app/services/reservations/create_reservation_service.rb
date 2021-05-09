@@ -11,7 +11,7 @@ module Reservations
       reservation = Reservation.new(
         adults: adults,
         children: children,
-        user_id: user_id,
+        user_id: current_user.id,
         bedroom_id: bedroom_id,
         check_in: check_in,
         check_out: check_out
