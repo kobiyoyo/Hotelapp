@@ -16,7 +16,7 @@ module Reservations
       reservation.check_in = check_in if check_in.present?
       reservation.check_out = check_out if check_out.present?
       errors.merge!(reservation.errors) unless reservation.save
-      reservation 
+      reservation
     end
   end
 end

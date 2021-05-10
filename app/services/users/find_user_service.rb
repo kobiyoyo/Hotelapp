@@ -1,11 +1,11 @@
 module Users
-    class FindUserService
-        integer :id
+  class FindUserService < ActiveInteraction::Base
+    integer :id
 
-        def execute
-            user = User.find_by_id(id)
-            errors.add(:id, 'does not exist') unless user
-            user
-        end
+    def execute
+      user = User.find_by_id(id)
+      errors.add(:id, 'does not exist') unless user
+      user
     end
+  end
 end
