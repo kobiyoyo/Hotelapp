@@ -1,6 +1,7 @@
 module Reservations
   class CreateReservationService < ActiveInteraction::Base
-    integer :adults, :children, user_id, bedroom_id
+    object :current_user
+    integer :adults, :children, :user_id, :bedroom_id
     date :check_out, :check_in
 
     def to_model

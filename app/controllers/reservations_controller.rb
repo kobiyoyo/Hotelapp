@@ -17,7 +17,8 @@ class ReservationsController < ApplicationController
   end
 
   def create
-    result = Reservations::CreateReservationService.run(reservation_params)
+    @user = find_user!
+    result = Reservations::CreateReservationService.run(reservation_params.merge(current_user: @user))
 
     if result.valid?
       redirect_to @reservation, notice: "Reservation was successfully created."      
@@ -50,8 +51,13 @@ class ReservationsController < ApplicationController
     end
 
     def find_reservation!
-      reservation = FindReservationService.run(params)
+      reservation = Reservations::FindReservationService.run(params)
       raise ActiveRecord::RecordNotFound, reservation.errors.full_messages.to_sentence unless reservation.valid?
       reservation.result
+    end
+    def find_user!
+      user = Users::FindUserService.run(id: current_user.id)
+      raise ActiveRecord::RecordNotFound, user.errors.full_messages.to_sentence unless user.valid?
+      user.result
     end
 end
