@@ -1,6 +1,9 @@
+require 'active_interaction'
+
 module Bedrooms
   class CreateBedroomService < ActiveInteraction::Base
     integer :status, :quantity, :room_type_id, :room_code
+
     def to_model
       Bedroom.new
     end
