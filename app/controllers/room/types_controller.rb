@@ -1,5 +1,7 @@
 class Room::TypesController < ApplicationController
+
   before_action :authenticate_user!
+  
   def index
     @room_types = Types::ListRoomTypeService.run!
   end
